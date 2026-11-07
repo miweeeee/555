@@ -1,0 +1,151 @@
+<!DOCTYPE html>
+<html lang="zh-Hant">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>暮光選物｜互動購物平台</title>
+<style>
+:root{--ink:#20242b;--muted:#78808d;--paper:#f5f3ef;--card:#fff;--accent:#596b58;--accent2:#d7a86e;--line:#e8e5df;--danger:#b84e4e;--shadow:0 14px 40px #20242b12}
+*{box-sizing:border-box}body{margin:0;background:var(--paper);color:var(--ink);font-family:Inter,"Noto Sans TC",Arial,sans-serif}
+button,input,select,textarea{font:inherit}button{cursor:pointer;border:0;border-radius:12px;padding:11px 16px;background:var(--accent);color:white;transition:.2s}button:hover{filter:brightness(1.08);transform:translateY(-1px)}button.secondary{background:#ecefe9;color:var(--ink)}button.ghost{background:transparent;color:var(--ink);border:1px solid var(--line)}button.danger{background:var(--danger)}button:disabled{opacity:.45;cursor:not-allowed;transform:none}
+header{height:76px;background:#fff;display:flex;align-items:center;justify-content:space-between;padding:0 5vw;border-bottom:1px solid var(--line);position:sticky;top:0;z-index:5}
+.logo{font-family:Georgia,serif;font-size:25px;letter-spacing:2px;font-weight:bold}.logo span{color:var(--accent)}
+nav{display:flex;gap:8px;align-items:center}.navbtn{background:transparent;color:var(--ink);padding:10px 13px}.navbtn.active{background:#edf0eb;color:var(--accent)}
+.layout{max-width:1240px;margin:30px auto;padding:0 24px 70px;display:grid;grid-template-columns:minmax(0,1fr) 68px;gap:22px}
+main{min-width:0}.hero{background:linear-gradient(110deg,#26352e,#687b67);color:white;border-radius:24px;padding:44px;display:flex;justify-content:space-between;align-items:center;min-height:220px;overflow:hidden}
+.hero h1{font-family:Georgia,serif;font-size:clamp(32px,5vw,54px);font-weight:500;margin:8px 0}.hero p{color:#e0e8df}.eyebrow{letter-spacing:3px;font-size:11px;text-transform:uppercase;color:var(--accent2)}
+.hero-mark{font-family:Georgia,serif;font-size:110px;opacity:.22;margin-right:5%}
+.toolbar{display:flex;justify-content:space-between;align-items:center;margin:28px 0 16px;gap:12px}.toolbar h2{margin:0;font-size:22px}.muted{color:var(--muted);font-size:13px}
+.products{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:18px}.product{background:white;border-radius:18px;overflow:hidden;box-shadow:var(--shadow);cursor:pointer;border:1px solid transparent;transition:.2s}.product:hover{transform:translateY(-4px);border-color:#c8d0c4}
+.product img{width:100%;aspect-ratio:4/3;object-fit:cover;background:#e8e6e0;display:block}.product-info{padding:15px}.product-info h3{margin:0 0 7px;font-size:16px}.price{font-weight:700;color:var(--accent);font-size:18px}.stock{font-size:12px;color:var(--muted);margin:8px 0 12px}.product-info button{width:100%}
+.page{display:none}.page.active{display:block}.panel{background:white;border:1px solid var(--line);border-radius:20px;padding:24px;box-shadow:var(--shadow);margin-bottom:18px}
+.grid2{display:grid;grid-template-columns:1fr 1fr;gap:18px}.field{display:flex;flex-direction:column;gap:7px;margin:13px 0}.field label{font-size:13px;color:#626b73}.field input,.field select,.field textarea{border:1px solid var(--line);border-radius:10px;padding:12px;background:#fcfcfb;color:var(--ink);width:100%}
+.row{display:flex;justify-content:space-between;align-items:center;gap:12px}.cartline{display:grid;grid-template-columns:68px 1fr auto auto;gap:14px;align-items:center;padding:13px 0;border-bottom:1px solid var(--line)}.cartline img{width:68px;height:60px;object-fit:cover;border-radius:10px}.qty{display:flex;align-items:center;gap:8px}.qty button{padding:5px 10px;border-radius:8px}.total{font-size:22px;font-weight:700}
+.side{position:sticky;top:100px;height:max-content;background:white;border:1px solid var(--line);border-radius:18px;padding:9px;display:flex;flex-direction:column;gap:8px;box-shadow:var(--shadow)}
+.side button{height:48px;width:48px;padding:0;background:#f0f2ee;color:var(--ink);font-size:18px;position:relative}.side button.active{background:var(--accent);color:white}.count{position:absolute;right:-4px;top:-5px;background:var(--accent2);color:#222;border-radius:20px;font-size:10px;padding:2px 5px}
+.detail{display:grid;grid-template-columns:1fr 1fr;gap:28px}.detail img{width:100%;border-radius:16px;aspect-ratio:1/1;object-fit:cover;background:#eee}.tag{display:inline-block;background:#edf0eb;color:var(--accent);border-radius:20px;padding:5px 10px;font-size:12px}
+table{width:100%;border-collapse:collapse;font-size:14px}th,td{text-align:left;padding:12px;border-bottom:1px solid var(--line)}th{color:var(--muted);font-weight:500}
+.notice{background:#fff7e9;border:1px solid #f0dfc2;padding:12px 14px;border-radius:12px;color:#72572f;font-size:13px;line-height:1.6}
+footer{text-align:center;color:var(--muted);padding:25px;font-size:12px}
+@media(max-width:800px){.layout{grid-template-columns:1fr;padding:0 14px}.side{position:fixed;z-index:8;bottom:12px;top:auto;left:50%;transform:translateX(-50%);height:auto;flex-direction:row}.products{grid-template-columns:repeat(2,minmax(0,1fr))}.hero{padding:28px}.hero-mark{display:none}.grid2,.detail{grid-template-columns:1fr}header{padding:0 16px}nav .navbtn:nth-child(2){display:none}}
+@media(max-width:480px){.products{grid-template-columns:1fr 1fr;gap:10px}.product-info{padding:11px}.product-info h3{font-size:14px}.cartline{grid-template-columns:52px 1fr auto}.cartline img{width:52px;height:52px}.cartline .remove{grid-column:3}.panel{padding:16px}}
+</style>
+</head>
+<body>
+<header>
+  <div class="logo">暮光<span>選物</span></div>
+  <nav>
+    <button class="navbtn active" data-page="shop">商品選購</button>
+    <button class="navbtn" data-page="merchant">商家資訊</button>
+    <button class="navbtn" data-page="cart">購物車 <span id="navCount">0</span></button>
+  </nav>
+</header>
+<div class="layout">
+<main>
+<section id="shop" class="page active">
+  <div class="hero"><div><div class="eyebrow">CURATED DAILY GOODS</div><h1>讓日常，值得收藏。</h1><p>精選生活物件・簡約設計・安心配送</p><button onclick="showPage('shop')">探索商品 →</button></div><div class="hero-mark">暮</div></div>
+  <div class="toolbar"><div><h2>本週精選</h2><div class="muted">點擊商品卡片查看商品與商家資訊</div></div><select id="sort" onchange="renderProducts()" style="padding:10px;border:1px solid var(--line);border-radius:10px"><option value="default">預設排序</option><option value="low">價格由低到高</option><option value="high">價格由高到低</option></select></div>
+  <div id="productGrid" class="products"></div>
+  <div class="row" style="margin-top:24px"><span class="muted" id="pageLabel">第 1 頁 / 共 2 頁</span><div><button class="ghost" onclick="changePage(-1)">上一頁</button> <button onclick="changePage(1)">下一頁</button></div></div>
+</section>
+<section id="detail" class="page">
+  <div class="toolbar"><button class="ghost" onclick="showPage('shop')">← 返回商品</button><span class="tag">商品詳細資料</span></div>
+  <div id="detailContent" class="panel"></div>
+</section>
+<section id="merchant" class="page">
+  <div class="toolbar"><h2>商家專區</h2><span class="tag">品牌資訊</span></div>
+  <div class="panel grid2"><div><div class="eyebrow">STORE PROFILE</div><h2>暮光選物工作室</h2><p>以簡約、耐用與日常美感為選品核心，提供生活風格商品。</p><p class="muted">營業時間：週一至週五 10:00–18:00</p><p class="muted">客服信箱：service@example.com（示範資料）</p></div><div class="notice">商家聯絡與付款目前為展示用資料。此原型不會真的收款、建立物流單或驗證身分。</div></div>
+  <div class="panel"><h3>商家商品管理（示範）</h3><p class="muted">商品庫存與售價由管理員介面調整。</p><button onclick="showPage('admin')">前往管理員介面</button></div>
+</section>
+<section id="cart" class="page">
+  <div class="toolbar"><h2>購物車</h2><span class="muted">確認品項與數量</span></div>
+  <div class="panel"><div id="cartItems"></div><div class="row" style="padding-top:20px"><span>商品總額</span><span class="total" id="cartTotal">$0</span></div><div style="text-align:right;margin-top:18px"><button onclick="showPage('checkout')">前往結帳 →</button></div></div>
+</section>
+<section id="checkout" class="page">
+  <div class="toolbar"><h2>結帳資料</h2><span class="muted">請確認寄送資訊</span></div>
+  <form class="panel" id="checkoutForm">
+    <div class="grid2"><div class="field"><label>收件人姓名</label><input id="recipient" required placeholder="請輸入真實收件姓名"></div><div class="field"><label>聯絡電話</label><input id="phone" required inputmode="tel" placeholder="09xxxxxxxx"></div></div>
+    <div class="field"><label>寄送地址</label><input id="address" required placeholder="縣市、區域、路街與門牌"></div>
+    <div class="grid2"><div class="field"><label>付款方式</label><select id="payment"><option>貨到付款（示範）</option><option>銀行轉帳（示範）</option><option>信用卡（僅展示，不會扣款）</option></select></div><div class="field"><label>配送方式</label><select id="delivery"><option>宅配</option><option>超商取貨（示範）</option></select></div></div>
+    <div class="field"><label><input type="checkbox" id="verify" required style="width:auto"> 我確認上述收件資料正確，並同意此為模擬訂單</label></div>
+    <div class="notice">身分驗證：此處僅以使用者勾選確認作為流程示範，沒有蒐集身分證字號、證件影像或進行真人／政府資料庫驗證。正式上線需串接合規的第三方驗證服務。</div>
+    <div class="row" style="margin-top:20px"><strong id="checkoutTotal">應付金額：$0</strong><button type="submit">送出模擬訂單</button></div>
+  </form>
+</section>
+<section id="success" class="page"><div class="panel" style="text-align:center;padding:50px 20px"><div style="font-size:48px">✓</div><h2>訂單已建立</h2><p id="orderSuccessText" class="muted"></p><button onclick="showPage('shop')">繼續逛逛</button></div></section>
+<section id="admin" class="page">
+  <div class="toolbar"><h2>管理員控制台</h2><span class="tag">ADMIN</span></div>
+  <div id="adminLogin" class="panel" style="max-width:500px;margin:auto"><h3>管理員登入</h3><p class="muted">輸入示範管理員金鑰以開啟訂單管理。</p><div class="field"><label>管理員金鑰</label><input id="adminKey" type="password" placeholder="輸入管理員金鑰"></div><button onclick="adminLogin()">登入管理介面</button><p id="loginError" style="color:var(--danger);font-size:13px"></p></div>
+  <div id="adminPanel" style="display:none">
+    <div class="grid2"><div class="panel"><div class="muted">累計訂單</div><div class="total" id="orderCount">0</div></div><div class="panel"><div class="muted">目前商品數</div><div class="total" id="productCount">10</div></div></div>
+    <div class="panel"><h3>訂單管控</h3><div style="overflow:auto"><table><thead><tr><th>訂單編號</th><th>收件人</th><th>金額</th><th>付款方式</th><th>狀態</th><th>操作</th></tr></thead><tbody id="ordersTable"></tbody></table></div></div>
+    <div class="panel"><h3>庫存調整</h3><div style="overflow:auto"><table><thead><tr><th>商品</th><th>剩餘數量</th><th>調整</th></tr></thead><tbody id="stockTable"></tbody></table></div></div>
+    <button class="secondary" onclick="adminLogout()">登出</button>
+  </div>
+</section>
+</main>
+<aside class="side" aria-label="快速導覽">
+  <button class="active" title="商品" onclick="showPage('shop')">⌂</button>
+  <button title="購物車" onclick="showPage('cart')">🛒<span class="count" id="sideCount">0</span></button>
+  <button title="結帳" onclick="showPage('checkout')">▣</button>
+  <button title="商家" onclick="showPage('merchant')">♧</button>
+  <button title="管理員" onclick="showPage('admin')">⚙</button>
+</aside>
+</div>
+<footer>暮光選物 DEMO · 前端互動原型 · 訂單與付款皆僅儲存在目前瀏覽器</footer>
+<script>
+const ADMIN_KEY = "TWILIGHT-ADMIN-2026";
+const products = [
+ {id:1,name:"霧白陶瓷杯",price:480,stock:18,desc:"霧面釉色與溫潤手感，適合每日使用。"},
+ {id:2,name:"原木桌面收納",price:890,stock:12,desc:"整理桌面，也整理生活節奏。"},
+ {id:3,name:"奶油色香氛燭台",price:650,stock:9,desc:"柔和造型，為空間添上一點安定。"},
+ {id:4,name:"手作編織提袋",price:720,stock:15,desc:"輕巧實用，日常外出好搭配。"},
+ {id:5,name:"極簡桌燈",price:1280,stock:7,desc:"溫暖光線，陪伴閱讀與工作時刻。"},
+ {id:6,name:"石紋托盤",price:560,stock:20,desc:"簡潔線條，收納飾品與小物。"},
+ {id:7,name:"棉麻靠枕",price:780,stock:11,desc:"自然材質與低彩度配色。"},
+ {id:8,name:"玻璃花器",price:420,stock:14,desc:"透明輪廓，讓花枝成為主角。"},
+ {id:9,name:"旅行收納包",price:590,stock:16,desc:"分類收納，讓出行更從容。"},
+ {id:10,name:"設計筆記本",price:350,stock:30,desc:"記錄靈感與生活片段。"}
+];
+let cart={},currentPage=1,selectedProduct=1,orders=[],adminAuthed=false;
+const money=n=>"$"+Number(n).toLocaleString("zh-TW");
+const imgSrc=id=>id+".jpg";
+function showPage(id){
+ document.querySelectorAll(".page").forEach(p=>p.classList.remove("active"));
+ const el=document.getElementById(id); if(el)el.classList.add("active");
+ document.querySelectorAll(".navbtn").forEach(b=>b.classList.toggle("active",b.dataset.page===id));
+ if(id==="cart")renderCart(); if(id==="checkout")updateCheckoutTotal(); if(id==="admin"&&adminAuthed)renderAdmin();
+ window.scrollTo({top:0,behavior:"smooth"});
+}
+document.querySelectorAll(".navbtn").forEach(b=>b.addEventListener("click",()=>showPage(b.dataset.page)));
+function renderProducts(){
+ let list=[...products];const sort=document.getElementById("sort").value;
+ if(sort==="low")list.sort((a,b)=>a.price-b.price);if(sort==="high")list.sort((a,b)=>b.price-a.price);
+ const pages=Math.ceil(list.length/6);currentPage=Math.min(currentPage,pages);
+ const shown=list.slice((currentPage-1)*6,currentPage*6);
+ document.getElementById("productGrid").innerHTML=shown.map(p=>`<article class="product" onclick="openProduct(${p.id})"><img src="${imgSrc(p.id)}" alt="${p.name}" onerror="this.src='https://placehold.co/640x480/e8e6e0/596b58?text=${encodeURIComponent('商品 '+p.id)}'"><div class="product-info"><h3>${p.name}</h3><div class="price">${money(p.price)}</div><div class="stock">剩餘數量：${p.stock}</div><button onclick="event.stopPropagation();addToCart(${p.id})" ${p.stock===0?'disabled':''}>加入購物車</button></div></article>`).join("");
+ document.getElementById("pageLabel").textContent=`第 ${currentPage} 頁 / 共 ${pages} 頁`;
+}
+function changePage(n){currentPage=Math.max(1,Math.min(2,currentPage+n));renderProducts()}
+function openProduct(id){selectedProduct=id;const p=products.find(x=>x.id===id);document.getElementById("detailContent").innerHTML=`<div class="detail"><img src="${imgSrc(p.id)}" alt="${p.name}" onerror="this.src='https://placehold.co/700x700/e8e6e0/596b58?text=${encodeURIComponent('商品 '+p.id)}'"><div><span class="tag">暮光選物・現貨</span><h2>${p.name}</h2><div class="price" style="font-size:26px">${money(p.price)}</div><p class="muted">剩餘數量：${p.stock}</p><p>${p.desc}</p><div class="field"><label>購買數量</label><input type="number" id="buyQty" min="1" max="${p.stock}" value="1"></div><button onclick="addToCart(${p.id},Number(document.getElementById('buyQty').value))" ${p.stock===0?'disabled':''}>加入購物車</button><button class="secondary" onclick="showPage('merchant')" style="margin-left:8px">查看商家介面</button><hr style="border:0;border-top:1px solid var(--line);margin:24px 0"><h3>商家資訊</h3><p class="muted">暮光選物工作室｜提供商品諮詢、出貨與售後服務</p></div></div>`;showPage("detail")}
+function addToCart(id,qty=1){const p=products.find(x=>x.id===id);qty=Number(qty);if(!Number.isInteger(qty)||qty<1){alert("請輸入有效購買數量");return}if(qty>(p.stock-(cart[id]||0))){alert("購買數量超過剩餘庫存");return}cart[id]=(cart[id]||0)+qty;updateCartCount();alert("已加入購物車");}
+function updateCartCount(){const n=Object.values(cart).reduce((a,b)=>a+b,0);document.getElementById("navCount").textContent=n;document.getElementById("sideCount").textContent=n}
+function renderCart(){const entries=Object.entries(cart).filter(([id,q])=>q>0);document.getElementById("cartItems").innerHTML=entries.length?entries.map(([id,q])=>{const p=products.find(x=>x.id==id);return `<div class="cartline"><img src="${imgSrc(p.id)}" onerror="this.src='https://placehold.co/100x100/e8e6e0/596b58?text=${p.id}'"><div><b>${p.name}</b><div class="muted">${money(p.price)} · 庫存 ${p.stock}</div></div><div class="qty"><button class="secondary" onclick="changeQty(${id},-1)">−</button>${q}<button class="secondary" onclick="changeQty(${id},1)">＋</button></div><button class="ghost remove" onclick="removeItem(${id})">移除</button></div>`}).join(""):'<p class="muted">購物車目前是空的，去挑選喜歡的商品吧。</p>';document.getElementById("cartTotal").textContent=money(cartSum())}
+function cartSum(){return Object.entries(cart).reduce((s,[id,q])=>s+products.find(p=>p.id==id).price*q,0)}
+function changeQty(id,d){const p=products.find(x=>x.id===id),next=(cart[id]||0)+d;if(next<1){delete cart[id]}else if(next>p.stock){alert("已達庫存上限")}else cart[id]=next;updateCartCount();renderCart()}
+function removeItem(id){delete cart[id];updateCartCount();renderCart()}
+function updateCheckoutTotal(){document.getElementById("checkoutTotal").textContent="應付金額："+money(cartSum())}
+document.getElementById("checkoutForm").addEventListener("submit",e=>{e.preventDefault();if(!Object.keys(cart).length){alert("購物車是空的");showPage("shop");return}for(const [id,q] of Object.entries(cart)){if(q>products.find(p=>p.id==id).stock){alert("庫存已變動，請重新確認");return}}
+ const order={id:"TG"+Date.now().toString().slice(-8),name:recipient.value,phone:phone.value,address:address.value,total:cartSum(),payment:payment.value,status:"待確認",items:Object.entries(cart).map(([id,q])=>({name:products.find(p=>p.id==id).name,qty:q}))};
+ Object.entries(cart).forEach(([id,q])=>products.find(p=>p.id==id).stock-=q);orders.unshift(order);cart={};updateCartCount();document.getElementById("orderSuccessText").textContent="訂單編號："+order.id+"；此為本機模擬訂單。";e.target.reset();renderProducts();showPage("success");
+});
+function adminLogin(){if(document.getElementById("adminKey").value===ADMIN_KEY){adminAuthed=true;document.getElementById("adminLogin").style.display="none";document.getElementById("adminPanel").style.display="block";renderAdmin()}else document.getElementById("loginError").textContent="金鑰錯誤，請再試一次。"}
+function adminLogout(){adminAuthed=false;document.getElementById("adminLogin").style.display="block";document.getElementById("adminPanel").style.display="none";document.getElementById("adminKey").value="";showPage("shop")}
+function renderAdmin(){document.getElementById("orderCount").textContent=orders.length;document.getElementById("productCount").textContent=products.length;document.getElementById("ordersTable").innerHTML=orders.length?orders.map(o=>`<tr><td>${o.id}</td><td>${o.name}</td><td>${money(o.total)}</td><td>${o.payment}</td><td><select onchange="setOrderStatus('${o.id}',this.value)">${["待確認","處理中","已出貨","已完成","已取消"].map(s=>`<option ${o.status===s?'selected':''}>${s}</option>`).join("")}</select></td><td><button class="danger" onclick="deleteOrder('${o.id}')">刪除</button></td></tr>`).join(""):'<tr><td colspan="6" class="muted">目前沒有訂單</td></tr>';document.getElementById("stockTable").innerHTML=products.map(p=>`<tr><td>${p.name}</td><td>${p.stock}</td><td><button class="secondary" onclick="adjustStock(${p.id},-1)">−</button> <button class="secondary" onclick="adjustStock(${p.id},1)">＋</button></td></tr>`).join("")}
+function setOrderStatus(id,s){const o=orders.find(x=>x.id===id);if(o)o.status=s}
+function deleteOrder(id){if(confirm("確定刪除此筆示範訂單？")){orders=orders.filter(o=>o.id!==id);renderAdmin()}}
+function adjustStock(id,n){const p=products.find(x=>x.id===id);p.stock=Math.max(0,p.stock+n);renderAdmin();renderProducts()}
+renderProducts();updateCartCount();
+</script>
+</body>
+</html>
